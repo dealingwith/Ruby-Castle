@@ -5,7 +5,7 @@ require 'io/console'
 
 # things = ("a".."z").to_a
 @things = [
-  'O', 'W', 'B', 'D', 'S', 'C', 'H', 'R', 'M'
+  'O', 'W', 'B', 'D', 'C', 'H', 'R', 'M'
 ]
 @things_map = {
   "O" => "Ogre",
