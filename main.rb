@@ -2,6 +2,7 @@
 
 require 'awesome_print'
 require 'io/console'
+require './monsters'
 
 # things = ("a".."z").to_a
 @things = [
@@ -57,10 +58,19 @@ def make_map()
   end
 end
 
+def set_token_at_current_player_position(token)
+  @levels[@player_position[2]][@player_position[0]][@player_position[1]] = token
+end
+
+def token_at_current_player_position()
+  @levels[@player_position[2]][@player_position[0]][@player_position[1]]
+end
+
 def reposition_player()
-  current_level = @levels[@player_position[2]] # the level the player is on
-  @current_thing = current_level[@player_position[0]][@player_position[1]]
-  current_level[@player_position[0]][@player_position[1]] = "P"
+  # get what was in that space
+  @current_thing = token_at_current_player_position()
+  # set that space to the player
+  set_token_at_current_player_position("P")
 end
 
 def move_player()
@@ -85,9 +95,46 @@ def clear_and_prompt()
   puts "You're at #{@player_position[0]}, #{@player_position[1]}"
   if (@current_thing != " ")
     puts "You see a #{thing_in_current_space()}"
+    do_room_action()
   else
     puts "There's nothing here."
   end
+  prompt_for_direction()
+end
+
+def do_room_action()
+  if (@current_thing == "O")
+    puts "There's an ogre here!"
+
+    ogre = Ogre.new(nil, 10, 5)
+    puts "The ogre says, 'I am #{ogre.name}!' He has #{ogre.health} health and #{ogre.attack} attack."
+    ogre.name = "Pinky"
+    puts "Now my name is #{ogre.name}!"
+
+    player_response = prompt_for_action("Do you want to fight it? (y/n)")
+    if (player_response == "y")
+      puts "You fight the ogre!"
+      if (rand < 0.5)
+        puts "You win!"
+        set_token_at_current_player_position(" ")
+      else
+        puts "You lose!"
+        puts "GAME OVER"
+        exit
+      end
+    else
+      puts "You run away!"
+    end
+  end
+end
+
+def prompt_for_action(prompt_string)
+  puts prompt_string
+  print '> '
+  $stdin.gets.chomp
+end
+
+def prompt_for_direction()
   puts "Where do you want to go? (w, a, s, d)"
   puts "Or you can go up or down a level (u, d)" if (@current_thing == "S")
   print '> '
@@ -105,6 +152,7 @@ loop do
   case direction
   when "w"
     if @player_position[0] - 1 >= 0
+      set_token_at_current_player_position(@current_thing)
       @player_position[0] -= 1
       puts "You walk through the door to the north."
       move_player()
@@ -113,6 +161,7 @@ loop do
     end
   when "a"
     if @player_position[1] - 1 >= 0
+      set_token_at_current_player_position(@current_thing)
       @player_position[1] -= 1
       puts "You walk through the door to the west."
       move_player()
@@ -121,6 +170,7 @@ loop do
     end
   when "s"
     if @player_position[0] + 1 < 10
+      set_token_at_current_player_position(@current_thing)
       @player_position[0] += 1
       puts "You walk through the door to the south."
       move_player()
@@ -129,6 +179,7 @@ loop do
     end
   when "d"
     if @player_position[1] + 1 < 10
+      set_token_at_current_player_position(@current_thing)
       @player_position[1] += 1
       puts "You walk through the door to the east."
       move_player()
@@ -142,11 +193,3 @@ loop do
     print '> '
   end
 end
-
-
-# ap levels
-# levels.each do |level|
-#   puts "Level #{levels.index(level)}"
-#   print_level(level)
-# end
-
