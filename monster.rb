@@ -11,3 +11,11 @@ end
 class Ogre < Monster
 
 end
+
+class Blob < Monster
+
+end
+
+class Dragon < Monster
+
+end

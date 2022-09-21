@@ -2,7 +2,8 @@
 
 require 'awesome_print'
 require 'io/console'
-require './monsters'
+require './monster'
+require './room'
 
 # things = ("a".."z").to_a
 @things = [
@@ -95,37 +96,21 @@ def clear_and_prompt()
   puts "You're at #{@player_position[0]}, #{@player_position[1]}"
   if (@current_thing != " ")
     puts "You see a #{thing_in_current_space()}"
-    do_room_action()
+    # do_room_action()
+    room = Room.new(@current_thing)
+    result = room.do_room_action()
+    if (result == false)
+      puts "GAME OVER"
+      exit
+    elseif(result == "ran away")
+      # do nothing
+    elsif (result == true)
+      set_token_at_current_player_position(" ")
+    end
   else
     puts "There's nothing here."
   end
   prompt_for_direction()
-end
-
-def do_room_action()
-  if (@current_thing == "O")
-    puts "There's an ogre here!"
-
-    ogre = Ogre.new(nil, 10, 5)
-    puts "The ogre says, 'I am #{ogre.name}!' He has #{ogre.health} health and #{ogre.attack} attack."
-    ogre.name = "Pinky"
-    puts "Now my name is #{ogre.name}!"
-
-    player_response = prompt_for_action("Do you want to fight it? (y/n)")
-    if (player_response == "y")
-      puts "You fight the ogre!"
-      if (rand < 0.5)
-        puts "You win!"
-        set_token_at_current_player_position(" ")
-      else
-        puts "You lose!"
-        puts "GAME OVER"
-        exit
-      end
-    else
-      puts "You run away!"
-    end
-  end
 end
 
 def prompt_for_action(prompt_string)
