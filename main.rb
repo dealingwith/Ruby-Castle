@@ -76,10 +76,10 @@ end
 
 def move_player()
   reposition_player()
-  # (0..3).each do |n|
-  #   sleep 0.25
-  #   print "."
-  # end
+  (0..2).each do |n|
+    sleep 0.25
+    print "."
+  end
   print "\n"
   clear_and_prompt()
 end
@@ -104,6 +104,7 @@ def clear_and_prompt()
       exit
     elseif(result == "ran away")
       # do nothing
+      set_token_at_current_player_position(@current_thing)
     elsif (result == true)
       set_token_at_current_player_position(" ")
     end
@@ -121,7 +122,7 @@ end
 
 def prompt_for_direction()
   puts "Where do you want to go? (w, a, s, d)"
-  puts "Or you can go up or down a level (u, d)" if (@current_thing == "S")
+  # puts "Or you can go up or down a level (u, d)" if (@current_thing == "S")
   print '> '
 end
 
@@ -133,7 +134,7 @@ reposition_player()
 clear_and_prompt()
 
 loop do
-  direction = STDIN.getch.chomp
+  direction = STDIN.gets.chomp
   case direction
   when "w"
     if @player_position[0] - 1 >= 0
@@ -173,6 +174,14 @@ loop do
     end
   when "q"
     exit
+  when "map"
+    print_level(@levels[@player_position[2]])
+  when "help"
+    puts "w, a, s, d to move"
+    # puts "u to go up a level"
+    # puts "d to go down a level"
+    puts "q to quit"
+    puts "map to see the map"
   else
     puts "I don't know what you mean."
     print '> '
