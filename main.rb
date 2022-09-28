@@ -2,6 +2,7 @@
 
 require 'awesome_print'
 require 'io/console'
+require './player.rb'
 require './monster'
 require './room'
 
@@ -89,15 +90,13 @@ def thing_in_current_space()
 end
 
 def clear_and_prompt()
-  # system "clear"
   print_level(@levels[@player_position[2]])
   puts "\n"
   puts "You're on level #{@player_position[2] + 1}"
   puts "You're at #{@player_position[0]}, #{@player_position[1]}"
   if (@current_thing != " ")
     puts "You see a #{thing_in_current_space()}"
-    # do_room_action()
-    room = Room.new(@current_thing)
+    room = Room.new(@current_thing, @things_map, @player)
     result = room.do_room_action()
     if (result == false)
       puts "GAME OVER"
@@ -131,6 +130,12 @@ end
 
 make_map()
 reposition_player()
+
+name = prompt_for_action("What is your name?")
+@player = Player.new(name)
+puts "Welcome to the dungeon, #{@player.name}!"
+puts "Your health is #{@player.health} and your attack is #{@player.attack}"
+
 clear_and_prompt()
 
 loop do

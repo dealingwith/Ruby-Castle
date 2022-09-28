@@ -1,21 +1,42 @@
 class Room
-  def initialize(thing)
+
+  # "O" => "Ogre",
+  # "W" => "Witch",
+  # "B" => "Blob",
+  # "D" => "Dragon",
+  # "S" => "Stairs",
+  # "C" => "Chest",
+  # "H" => "Hole",
+  # "R" => "Rat",
+  # "M" => "Mushroom",
+  # "P" => "A shadow of your past self!"
+
+  def initialize(thing, thing_map, player)
     @thing = thing
-    @thing_map = {
-      "O" => "Ogre",
-      "B" => "Blob",
-      "D" => "Dragon",
-    }
+    @thing_map = thing_map
+    @player = player
   end
 
   def do_room_action()
-    if (@thing == "O" || @thing == "B" || @thing == "D")
+    if (["O", "B", "D", "R", "W"].include?(@thing))
       monster = @thing_map[@thing]
-      puts "There's an #{monster} here!"
       monster = Object.const_get(monster).new()
       return do_battle(monster)
+    elsif (@thing == "C")
+      puts "You found a chest! You open it, natch!"
+      randomthing = ["health potion", "a better sword"].sample
+      puts "You found a #{randomthing}!"
+      if (randomthing == "health potion")
+        puts "You drink it and feel better!"
+        @player.health += 5
+        puts "You now have #{@player.health} health."
+      elsif (randomthing == "a better sword")
+        puts "You equip it and feel stronger!"
+        @player.attack += 1
+        puts "Your attack is now #{@player.attack}"
+      end
     else
-      puts "There's not a Ogre, Blog, or Dragon here! So I don't know what to tell you yet."
+      puts "I don't know what to tell you yet."
     end
     return true
   end
@@ -23,10 +44,9 @@ class Room
   def do_battle(monster)
     puts "You are doing battle with a #{monster.class} named #{monster.name}!"
     puts "It has #{monster.health} health and a #{monster.attack} level attack."
-    puts "You have 10 health and a 3 level attack."
+    puts "You have #{@player.health} health and a #{@player.attack} level attack."
     puts "You can attack or run away."
-    playerhealth = 10
-    playerattack = 3
+    playerattack = @player.attack
     while (monster.health > 0)
       print '> '
       choice = STDIN.gets.chomp
@@ -48,13 +68,13 @@ class Room
           sleep 0.3
           puts "The #{monster.class} attacks you!"
           monsterattackdamage = rand(monster.attack)
-          playerhealth -= monsterattackdamage
+          @player.health -= monsterattackdamage
           if (monsterattackdamage == 0)
             puts "The #{monster.class} misses!"
           else
-            puts "You take #{monsterattackdamage} damage! You have #{playerhealth} health left."
+            puts "You take #{monsterattackdamage} damage! You have #{@player.health} health left."
           end
-          if (playerhealth <= 0)
+          if (@player.health <= 0)
             puts "You died!"
             return false
           end
