@@ -18,6 +18,9 @@ class Room
   end
 
   def do_room_action()
+    if (@player.is_hallucinating)
+      puts "You see lots of colors and shapes. Weeee!"
+    end
     if (["O", "B", "D", "R", "W"].include?(@thing))
       monster = @thing_map[@thing]
       monster = Object.const_get(monster).new()
@@ -35,8 +38,41 @@ class Room
         @player.attack += 1
         puts "Your attack is now #{@player.attack}"
       end
+    elsif (@thing == "M")
+      puts "You found a mushroom!"
+      puts "Do you want to eat it?"
+      print '> '
+      choice = STDIN.gets.chomp
+      case choice
+      when "y", "yes"
+        puts "You eat the mushroom and feel..."
+        (0..2).each do |n|
+          sleep 0.25
+          print "."
+        end
+        return eat_mushroom()
+      when "n", "no"
+        puts "You leave the mushroom alone."
+      end
     else
       puts "I don't know what to tell you yet."
+    end
+    return true
+  end
+
+  def eat_mushroom()
+    if (rand < 0.3)
+      puts "...great!"
+      @player.health += rand(1..5)
+      puts "You now have #{@player.health} health."
+    elsif (rand < 0.6)
+      # You hallucinate
+      puts "...straaaaange..."
+      @player.is_hallucinating = true
+    else
+      puts "...terrible! It was a poisonous mushroom!"
+      @player.health -= rand(1..5)
+      puts "You now have #{@player.health} health."
     end
     return true
   end
