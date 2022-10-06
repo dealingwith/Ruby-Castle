@@ -5,6 +5,7 @@ require 'io/console'
 require './player.rb'
 require './monster'
 require './room'
+require './mushroom'
 
 # things = ("a".."z").to_a
 @things = [

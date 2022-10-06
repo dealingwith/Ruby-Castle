@@ -15,6 +15,7 @@ class Room
     @thing = thing
     @thing_map = thing_map
     @player = player
+    @chest_contents = ['health potion', 'a better sword']
   end
 
   def do_room_action()
@@ -27,14 +28,27 @@ class Room
       return do_battle(monster)
     elsif (@thing == "C")
       puts "You found a chest! You open it, natch!"
-      randomthing = ["health potion", "a better sword"].sample
-      puts "You found a #{randomthing}!"
-      if (randomthing == "health potion")
+      @chest_contents = ['a cola', 'lizard'] if (@player.is_hallucinating)
+      randomthing_index = rand(@chest_contents.length)
+      puts "You found a #{@chest_contents[randomthing_index]}!"
+      if (randomthing_index == 0)
+        puts "It kind of tastes like a potion." if (@player.is_hallucinating)
         puts "You drink it and feel better!"
         @player.health += 5
         puts "You now have #{@player.health} health."
-      elsif (randomthing == "a better sword")
-        puts "You equip it and feel stronger!"
+        @player.sober_up()
+      elsif (randomthing_index == 1)
+        if (@player.is_hallucinating)
+          if (rand < 0.5)
+            puts "It's a scary #{@chest_contents[randomthing_index]}!"
+            puts "You drop the #{@chest_contents[randomthing_index]} and run away!"
+            return true
+          else
+            puts "You look contemplatively at the #{@chest_contents[randomthing_index]}."
+            puts "You decide to keep it."
+          end
+        end
+        puts "You feel stronger!"
         @player.attack += 1
         puts "Your attack is now #{@player.attack}"
       end
@@ -50,29 +64,17 @@ class Room
           sleep 0.25
           print "."
         end
-        return eat_mushroom()
+        @mushroom = Mushroom.new(@player)
+        @mushroom.eat_mushroom()
       when "n", "no"
         puts "You leave the mushroom alone."
       end
+      return true
     else
       puts "I don't know what to tell you yet."
     end
-    return true
-  end
-
-  def eat_mushroom()
-    if (rand < 0.3)
-      puts "...great!"
-      @player.health += rand(1..5)
-      puts "You now have #{@player.health} health."
-    elsif (rand < 0.6)
-      # You hallucinate
-      puts "...straaaaange..."
-      @player.is_hallucinating = true
-    else
-      puts "...terrible! It was a poisonous mushroom!"
-      @player.health -= rand(1..5)
-      puts "You now have #{@player.health} health."
+    if (@player.is_hallucinating)
+      @player.random_sobriety()
     end
     return true
   end
