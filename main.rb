@@ -2,10 +2,11 @@
 
 require 'awesome_print'
 require 'io/console'
-require './player.rb'
+require './player'
 require './monster'
 require './room'
 require './mushroom'
+require './chest'
 
 # things = ("a".."z").to_a
 @things = [
@@ -76,12 +77,16 @@ def reposition_player()
   set_token_at_current_player_position("P")
 end
 
-def move_player()
-  reposition_player()
+def suspense()
   (0..2).each do |n|
     sleep 0.25
     print "."
   end
+end
+
+def move_player()
+  reposition_player()
+  suspense()
   print "\n"
   clear_and_prompt()
 end
@@ -102,7 +107,7 @@ def clear_and_prompt()
     if (result == false)
       puts "GAME OVER"
       exit
-    elseif(result == "ran away")
+    elsif (result == "ran away")
       # do nothing
       set_token_at_current_player_position(@current_thing)
     elsif (result == true)
@@ -110,6 +115,7 @@ def clear_and_prompt()
     end
   else
     puts "There's nothing here."
+    set_token_at_current_player_position(" ")
   end
   prompt_for_direction()
 end
@@ -144,7 +150,6 @@ loop do
   case direction
   when "w"
     if @player_position[0] - 1 >= 0
-      set_token_at_current_player_position(@current_thing)
       @player_position[0] -= 1
       puts "You walk through the door to the north."
       move_player()
@@ -153,7 +158,6 @@ loop do
     end
   when "a"
     if @player_position[1] - 1 >= 0
-      set_token_at_current_player_position(@current_thing)
       @player_position[1] -= 1
       puts "You walk through the door to the west."
       move_player()
@@ -162,7 +166,6 @@ loop do
     end
   when "s"
     if @player_position[0] + 1 < 10
-      set_token_at_current_player_position(@current_thing)
       @player_position[0] += 1
       puts "You walk through the door to the south."
       move_player()
@@ -171,7 +174,6 @@ loop do
     end
   when "d"
     if @player_position[1] + 1 < 10
-      set_token_at_current_player_position(@current_thing)
       @player_position[1] += 1
       puts "You walk through the door to the east."
       move_player()

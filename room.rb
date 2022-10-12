@@ -15,7 +15,6 @@ class Room
     @thing = thing
     @thing_map = thing_map
     @player = player
-    @chest_contents = ['health potion', 'a better sword']
   end
 
   def do_room_action()
@@ -27,53 +26,24 @@ class Room
       monster = Object.const_get(monster).new()
       return do_battle(monster)
     elsif (@thing == "C")
-      puts "You found a chest! You open it, natch!"
-      @chest_contents = ['a cola', 'lizard'] if (@player.is_hallucinating)
-      randomthing_index = rand(@chest_contents.length)
-      puts "You found a #{@chest_contents[randomthing_index]}!"
-      if (randomthing_index == 0)
-        puts "It kind of tastes like a potion." if (@player.is_hallucinating)
-        puts "You drink it and feel better!"
-        @player.health += 5
-        puts "You now have #{@player.health} health."
-        @player.sober_up()
-      elsif (randomthing_index == 1)
-        if (@player.is_hallucinating)
-          if (rand < 0.5)
-            puts "It's a scary #{@chest_contents[randomthing_index]}!"
-            puts "You drop the #{@chest_contents[randomthing_index]} and run away!"
-            return true
-          else
-            puts "You look contemplatively at the #{@chest_contents[randomthing_index]}."
-            puts "You decide to keep it."
-          end
-        end
-        puts "You feel stronger!"
-        @player.attack += 1
-        puts "Your attack is now #{@player.attack}"
-      end
+      Chest.new(@player).open()
     elsif (@thing == "M")
-      puts "You found a mushroom!"
-      puts "Do you want to eat it?"
+      puts "You found a mushroom! Do you want to eat it?"
       print '> '
       choice = STDIN.gets.chomp
       case choice
       when "y", "yes"
         puts "You eat the mushroom and feel..."
-        (0..2).each do |n|
-          sleep 0.25
-          print "."
-        end
+        suspense()
         @mushroom = Mushroom.new(@player)
         @mushroom.eat_mushroom()
       when "n", "no"
         puts "You leave the mushroom alone."
       end
-      return true
     else
       puts "I don't know what to tell you yet."
     end
-    if (@player.is_hallucinating)
+    if (@thing != "M" && @player.is_hallucinating)
       @player.random_sobriety()
     end
     return true
