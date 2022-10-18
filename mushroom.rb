@@ -11,7 +11,7 @@ class Mushroom
       @player.sober_up()
     elsif (rand < 0.8)
       # You hallucinate
-      puts "straaaaange..."
+      puts "straaaaange".colorize(:light_green).on_black
       @player.is_hallucinating = true
     else
       puts "terrible! It was a poisonous mushroom!"

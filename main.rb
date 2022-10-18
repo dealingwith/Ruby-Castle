@@ -2,6 +2,7 @@
 
 require 'awesome_print'
 require 'io/console'
+require 'colorize' # https://github.com/fazibear/colorize
 require './player'
 require './monster'
 require './room'
@@ -74,7 +75,7 @@ def reposition_player()
   # get what was in that space
   @current_thing = token_at_current_player_position()
   # set that space to the player
-  set_token_at_current_player_position("P")
+  set_token_at_current_player_position("P".colorize(:blue))
 end
 
 def suspense()
@@ -99,13 +100,12 @@ def clear_and_prompt()
   print_level(@levels[@player_position[2]])
   puts "\n"
   puts "You're on level #{@player_position[2] + 1}"
-  puts "You're at #{@player_position[0]}, #{@player_position[1]}"
   if (@current_thing != " ")
-    puts "You see a #{thing_in_current_space()}"
+    puts "You see a #{thing_in_current_space()}".colorize(:yellow)
     room = Room.new(@current_thing, @things_map, @player)
     result = room.do_room_action()
     if (result == false)
-      puts "GAME OVER"
+      puts "GAME OVER".colorize(:red)
       exit
     elsif (result == "ran away")
       # do nothing
@@ -140,7 +140,7 @@ reposition_player()
 
 name = prompt_for_action("What is your name?")
 @player = Player.new(name)
-puts "Welcome to the dungeon, #{@player.name}!"
+puts "Welcome to the dungeon, #{@player.name}!".colorize(:blue)
 puts "Your health is #{@player.health} and your attack is #{@player.attack}"
 
 clear_and_prompt()
