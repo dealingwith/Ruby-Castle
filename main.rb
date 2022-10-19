@@ -1,5 +1,3 @@
-# castle
-
 require 'awesome_print'
 require 'io/console'
 require 'colorize' # https://github.com/fazibear/colorize
@@ -9,7 +7,6 @@ require './room'
 require './mushroom'
 require './chest'
 
-# things = ("a".."z").to_a
 @things = [
   'O', 'W', 'B', 'D', 'C', 'H', 'R', 'M'
 ]
@@ -26,11 +23,14 @@ require './chest'
   "P" => "A shadow of your past self!"
 }
 @current_thing = " "
+@levels = []
 
 def print_level(level)
-  level.each do |level_row|
+  puts ""
+  @levels[level].each do |level_row|
     puts level_row.join(" ")
   end
+  puts ""
 end
 
 def make_level()
@@ -64,11 +64,11 @@ def make_map()
 end
 
 def set_token_at_current_player_position(token)
-  @levels[@player_position[2]][@player_position[0]][@player_position[1]] = token
+  @levels[@player.z_position][@player.x_position][@player.y_position] = token
 end
 
 def token_at_current_player_position()
-  @levels[@player_position[2]][@player_position[0]][@player_position[1]]
+  @levels[@player.z_position][@player.x_position][@player.y_position]
 end
 
 def reposition_player()
@@ -80,7 +80,7 @@ end
 
 def suspense()
   (0..2).each do |n|
-    sleep 0.25
+    sleep 0.3
     print "."
   end
 end
@@ -88,7 +88,7 @@ end
 def move_player()
   reposition_player()
   suspense()
-  print "\n"
+  puts ""
   clear_and_prompt()
 end
 
@@ -97,9 +97,8 @@ def thing_in_current_space()
 end
 
 def clear_and_prompt()
-  print_level(@levels[@player_position[2]])
-  puts "\n"
-  puts "You're on level #{@player_position[2] + 1}"
+  print_level(@player.z_position)
+  puts "You're on level #{@player.z_position + 1}"
   if (@current_thing != " ")
     puts "You see a #{thing_in_current_space()}".colorize(:yellow)
     room = Room.new(@current_thing, @things_map, @player)
@@ -112,6 +111,8 @@ def clear_and_prompt()
       set_token_at_current_player_position(@current_thing)
     elsif (result == true)
       set_token_at_current_player_position(" ")
+    elsif (result == "stairs")
+      print_level(@player.z_position)
     end
   else
     puts "There's nothing here."
@@ -128,53 +129,49 @@ end
 
 def prompt_for_direction()
   puts "Where do you want to go? (w, a, s, d)"
-  # puts "Or you can go up or down a level (u, d)" if (@current_thing == "S")
   print '> '
 end
 
-@levels = []
-@player_position = [9, 9, 0] # x, y, z ---- I should consider y, x, z because that would be easier to use inside of reposition_player()
-
-make_map()
-reposition_player()
-
+# Let the game begin
 name = prompt_for_action("What is your name?")
 @player = Player.new(name)
 puts "Welcome to the dungeon, #{@player.name}!".colorize(:blue)
-puts "Your health is #{@player.health} and your attack is #{@player.attack}"
+puts "Your health is #{@player.health} and your attack is #{@player.attack}".colorize(:yellow)
 
+make_map()
+reposition_player()
 clear_and_prompt()
 
 loop do
   direction = STDIN.gets.chomp
   case direction
   when "w"
-    if @player_position[0] - 1 >= 0
-      @player_position[0] -= 1
+    if @player.x_position - 1 >= 0
+      @player.x_position -= 1
       puts "You walk through the door to the north."
       move_player()
     else
       puts "You can't go that way."
     end
   when "a"
-    if @player_position[1] - 1 >= 0
-      @player_position[1] -= 1
+    if @player.y_position - 1 >= 0
+      @player.y_position -= 1
       puts "You walk through the door to the west."
       move_player()
     else
       puts "You can't go that way."
     end
   when "s"
-    if @player_position[0] + 1 < 10
-      @player_position[0] += 1
+    if @player.x_position + 1 < 10
+      @player.x_position += 1
       puts "You walk through the door to the south."
       move_player()
     else
       puts "You can't go that way."
     end
   when "d"
-    if @player_position[1] + 1 < 10
-      @player_position[1] += 1
+    if @player.y_position + 1 < 10
+      @player.y_position += 1
       puts "You walk through the door to the east."
       move_player()
     else
@@ -182,12 +179,11 @@ loop do
     end
   when "q"
     exit
-  when "map"
-    print_level(@levels[@player_position[2]])
+  when "map", "m"
+    print_level(@player.z_position)
+    prompt_for_direction()
   when "help"
     puts "w, a, s, d to move"
-    # puts "u to go up a level"
-    # puts "d to go down a level"
     puts "q to quit"
     puts "map to see the map"
   else

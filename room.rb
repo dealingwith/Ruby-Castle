@@ -25,6 +25,8 @@ class Room
       monster = @thing_map[@thing]
       monster = Object.const_get(monster).new()
       return do_battle(monster)
+    elsif (@thing == "S") # stairs
+      return stairs()
     elsif (@thing == "C")
       Chest.new(@player).open()
     elsif (@thing == "M")
@@ -94,5 +96,38 @@ class Room
         puts "I don't understand that command."
       end
     end
+  end
+
+  def stairs()
+    x = @player.x_position
+    y = @player.y_position
+    z = @player.z_position
+    return true if (x == 9 && y == 9 && z == 0)
+    # if player is at 9,9, they can only go down
+    if (x == 9 && y == 9)
+      if (prompt_for_action("Go down? (y/n)") == "y")
+        if ((z - 1) < 0)
+          puts "You can't go down any lower."
+        else
+          @player.set_position(0, 0, z - 1)
+          puts "You go down a level."
+          # print_level(@player.z_position)
+          # reposition_player()
+        end
+      end
+    # if player is at 0,0, they can only go up
+    elsif (x == 0 && x == 0)
+      if (prompt_for_action("Go up? (y/n)") == "y")
+        if ((z + 1) > 9)
+          puts "You can't go up any higher."
+        else
+          @player.set_position(9, 9, z + 1)
+          puts "You go up a level."
+          # print_level(@player.z_position)
+          # reposition_player()
+        end
+      end
+    end
+    return "stairs"
   end
 end
