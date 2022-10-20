@@ -1,6 +1,8 @@
 require 'awesome_print'
 require 'io/console'
 require 'colorize' # https://github.com/fazibear/colorize
+require 'whirly' # https://github.com/janlelis/whirly
+require 'paint'
 require './player'
 require './monster'
 require './room'
@@ -78,10 +80,9 @@ def reposition_player()
   set_token_at_current_player_position("P".colorize(:blue))
 end
 
-def suspense()
-  (0..2).each do |n|
-    sleep 0.3
-    print "."
+def suspense(prompt="Suspense...")
+  Whirly.start spinner: "simpleDotsScrolling", color: false, status: prompt do
+    sleep 1.5
   end
 end
 
