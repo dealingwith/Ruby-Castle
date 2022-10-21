@@ -8,3 +8,5 @@ gem 'awesome_print'
 gem 'rubocop'
 gem 'rufo'
 gem 'colorize'
+gem 'whirly'
+gem 'paint' # makes whirly colorful (recommended)

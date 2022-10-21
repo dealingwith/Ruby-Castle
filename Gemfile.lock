@@ -5,6 +5,7 @@ GEM
     awesome_print (1.9.2)
     colorize (0.8.1)
     json (2.6.2)
+    paint (2.3.0)
     parallel (1.22.1)
     parser (3.1.2.1)
       ast (~> 2.4.1)
@@ -26,6 +27,8 @@ GEM
     ruby-progressbar (1.11.0)
     rufo (0.13.0)
     unicode-display_width (2.3.0)
+    whirly (0.3.0)
+      unicode-display_width (>= 1.1)
 
 PLATFORMS
   x86_64-darwin-21
@@ -33,8 +36,10 @@ PLATFORMS
 DEPENDENCIES
   awesome_print
   colorize
+  paint
   rubocop
   rufo
+  whirly
 
 BUNDLED WITH
    2.3.16

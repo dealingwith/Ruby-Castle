@@ -111,8 +111,6 @@ class Room
         else
           @player.set_position(0, 0, z - 1)
           puts "You go down a level."
-          # print_level(@player.z_position)
-          # reposition_player()
         end
       end
     # if player is at 0,0, they can only go up
@@ -123,8 +121,6 @@ class Room
         else
           @player.set_position(9, 9, z + 1)
           puts "You go up a level."
-          # print_level(@player.z_position)
-          # reposition_player()
         end
       end
     end
