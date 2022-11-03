@@ -20,8 +20,8 @@ class Game
   def reposition_player()
     # get what was in that space
     @current_thing = @map.token_at_current_player_position(@player)
-    # set that space to the player
-    @map.set_token_at_current_player_position(@player, "P".colorize(:blue))
+    # tell the map where the player is on this level
+    @map.set_current_player_xy_position(@player)
   end
 
   def move_player()
@@ -51,6 +51,7 @@ class Game
       elsif (result == true)
         @map.set_token_at_current_player_position(@player, " ")
       elsif (result == "stairs")
+        reposition_player()
         @map.print_level(@player.z_position)
       end
     else

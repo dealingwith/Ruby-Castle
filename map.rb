@@ -11,8 +11,8 @@ class Map
     @levels[level]
   end
 
-  def set_current_player_position(player)
-    # TODO
+  def set_current_player_xy_position(player)
+    @player_position = [player.x_position, player.y_position]
   end
 
   def set_token_at_current_player_position(player, token)
@@ -25,9 +25,23 @@ class Map
 
   def print_level(level)
     puts ""
-    @levels[level].each do |level_row|
-      puts level_row.join(" ")
+
+    @levels[level].each_with_index do |level_row, x_index|
+      # one row of the level
+      level_row.each_with_index do |level_cell, y_index|
+        # one cell of the level
+        if (x_index == @player_position[0] && y_index == @player_position[1])
+          # puts "printing the player token!"
+          print "P".colorize(:blue)
+        else
+          print level_cell
+        end
+        print " "
+      end
+
+      puts ""
     end
+
     puts ""
   end
 

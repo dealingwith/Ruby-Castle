@@ -102,6 +102,7 @@ class Room
     x = @player.x_position
     y = @player.y_position
     z = @player.z_position
+    # starting position
     return true if (x == 9 && y == 9 && z == 0)
     # if player is at 9,9, they can only go down
     if (x == 9 && y == 9)

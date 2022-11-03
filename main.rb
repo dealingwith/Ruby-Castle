@@ -70,9 +70,9 @@ loop do
     end
   when "q"
     exit
-  when "map", "m"
-    game.print_level(player.z_position)
-    game.prompt_for_direction()
+  # when "map", "m"
+  #   game.print_level(player.z_position)
+  #   game.prompt_for_direction()
   when "help"
     puts "w, a, s, d to move"
     puts "q to quit"
