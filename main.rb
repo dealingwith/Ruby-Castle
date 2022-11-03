@@ -8,6 +8,7 @@ require './monster'
 require './room'
 require './mushroom'
 require './chest'
+require './map'
 require './game'
 
 def suspense(prompt="Suspense...")
@@ -29,7 +30,6 @@ game = Game.new(player)
 puts "Welcome to the dungeon, #{player.name}!".colorize(:blue)
 puts "Your health is #{player.health} and your attack is #{player.attack}".colorize(:yellow)
 
-game.make_map()
 game.reposition_player()
 game.clear_and_prompt()
 

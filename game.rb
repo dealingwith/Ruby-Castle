@@ -1,8 +1,5 @@
 class Game
   def initialize(player)
-    @things = [
-      'O', 'W', 'B', 'D', 'C', 'H', 'R', 'M'
-    ]
     @things_map = {
       "O" => "Ogre",
       "W" => "Witch",
@@ -15,62 +12,16 @@ class Game
       "M" => "Mushroom",
       "P" => "A shadow of your past self!"
     }
+    @map = Map.new()
     @current_thing = " "
-    @levels = []
     @player = player
-  end
-
-  def print_level(level)
-    puts ""
-    @levels[level].each do |level_row|
-      puts level_row.join(" ")
-    end
-    puts ""
-  end
-
-  def make_level()
-    # make a single level
-    # an array of arrays
-    # 8 x 8
-    level = []
-    (0..9).each do |n|
-      level << []
-    end
-
-    level.each do |level_row|
-      # one row of the level
-      (0..9).each do |n|
-        if rand < 0.60
-          level_row << @things.sample
-        else
-          level_row << " "
-        end
-      end
-    end
-    level[0][0] = "S"
-    level[9][9] = "S"
-    return level
-  end
-
-  def make_map()
-    (0..9).each do |n|
-      @levels << make_level()
-    end
-  end
-
-  def set_token_at_current_player_position(token)
-    @levels[@player.z_position][@player.x_position][@player.y_position] = token
-  end
-
-  def token_at_current_player_position()
-    @levels[@player.z_position][@player.x_position][@player.y_position]
   end
 
   def reposition_player()
     # get what was in that space
-    @current_thing = token_at_current_player_position()
+    @current_thing = @map.token_at_current_player_position(@player)
     # set that space to the player
-    set_token_at_current_player_position("P".colorize(:blue))
+    @map.set_token_at_current_player_position(@player, "P".colorize(:blue))
   end
 
   def move_player()
@@ -85,7 +36,7 @@ class Game
   end
 
   def clear_and_prompt()
-    print_level(@player.z_position)
+    @map.print_level(@player.z_position)
     puts "You're on level #{@player.z_position + 1}"
     if (@current_thing != " ")
       puts "You see a #{thing_in_current_space()}".colorize(:yellow)
@@ -96,15 +47,15 @@ class Game
         exit
       elsif (result == "ran away")
         # do nothing
-        set_token_at_current_player_position(@current_thing)
+        @map.set_token_at_current_player_position(@player, @current_thing)
       elsif (result == true)
-        set_token_at_current_player_position(" ")
+        @map.set_token_at_current_player_position(@player, " ")
       elsif (result == "stairs")
-        print_level(@player.z_position)
+        @map.print_level(@player.z_position)
       end
     else
       puts "There's nothing here."
-      set_token_at_current_player_position(" ")
+      @map.set_token_at_current_player_position(@player, " ")
     end
     prompt_for_direction()
   end
