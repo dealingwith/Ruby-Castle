@@ -39,6 +39,17 @@ class Room
       when "n", "no"
         puts "You leave the mushroom alone."
       end
+    elsif (@thing == "H")
+      puts "There is a giant hole in the floor."
+      if rand(1..2).odd? && @player.z_position > 0
+        puts "You fall into the hole."
+        suspense()
+        @player.z_position -= 1 if @player.z_position > 0
+        @player.health -= 3
+        puts "It hurts, your health is now #{@player.health}."
+      else
+        puts "You avoid the hole."
+      end
     else
       puts "I don't know what to tell you yet."
     end
