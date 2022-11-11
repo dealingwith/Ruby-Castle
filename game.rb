@@ -35,7 +35,15 @@ class Game
     @things_map[@current_thing]
   end
 
+  def debug_message(message)
+    puts "----"
+    puts "DEBUG: #{message}".colorize(:light_blue)
+    puts "----"
+  end
+
   def clear_and_prompt()
+    # occassionally, the player will hallucinate (if they be trippin') (randomness handled in player.haluclinate)
+    @player.hallucinate()
     @map.print_level(@player.z_position)
     puts "You're on level #{@player.z_position + 1}"
     if (@current_thing != " ")

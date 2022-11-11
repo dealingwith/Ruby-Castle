@@ -18,9 +18,6 @@ class Room
   end
 
   def do_room_action()
-    if (@player.is_hallucinating)
-      puts "You see lots of colors and shapes. Weeee!".colorize(:light_green).on_black
-    end
     if (["O", "B", "D", "R", "W"].include?(@thing))
       monster = @thing_map[@thing]
       monster = Object.const_get(monster).new()
