@@ -44,7 +44,7 @@ class Game
   def clear_and_prompt()
     # occassionally, the player will hallucinate (if they be trippin') (randomness handled in player.haluclinate)
     @player.hallucinate()
-    @map.print_level(@player.z_position)
+    draw_map()
     puts "You're on level #{@player.z_position + 1}"
     if (@current_thing != " ")
       puts "You see a #{thing_in_current_space()}".colorize(:yellow)
@@ -60,7 +60,7 @@ class Game
         @map.set_token_at_current_player_position(@player, " ")
       elsif (result == "stairs")
         reposition_player()
-        @map.print_level(@player.z_position)
+        draw_map()
       end
     else
       puts "There's nothing here."
@@ -72,5 +72,9 @@ class Game
   def prompt_for_direction()
     puts "Where do you want to go? (w, a, s, d)"
     print '> '
+  end
+
+  def draw_map()
+    @map.print_level(@player.z_position)
   end
 end
