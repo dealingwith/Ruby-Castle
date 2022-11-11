@@ -42,6 +42,6 @@ class Player
   end
 
   def hallucinate()
-    puts "You randomly exclaim, " + "\"#{@exclamations.sample}\"".colorize(:light_green).on_black if (@is_hallucinating)
+    puts "You randomly exclaim, " + "\"#{@exclamations.sample}\"".colorize(:light_green).on_black if (@is_hallucinating) && rand(0..10).odd?
   end
 end

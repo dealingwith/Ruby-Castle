@@ -42,8 +42,8 @@ class Game
   end
 
   def clear_and_prompt()
-    # occassionally, the player will hallucinate (if they have eaten a mushroom)
-    @player.hallucinate() if rand(0..10).odd?
+    # occassionally, the player will hallucinate (if they be trippin') (randomness handled in player.haluclinate)
+    @player.hallucinate()
     @map.print_level(@player.z_position)
     puts "You're on level #{@player.z_position + 1}"
     if (@current_thing != " ")
